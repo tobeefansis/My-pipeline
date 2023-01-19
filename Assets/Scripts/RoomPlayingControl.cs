@@ -47,4 +47,15 @@ public class RoomPlayingControl : MonoBehaviour
             set => spawnPrefab = value;
         }
     }
+    public void UpdateLevel(LevelPrefabArgs args)
+    {
+        playingObjects = new List<PlayingObject>(args.SpawnPoints);
+    }
+    public void Clear()
+    {
+        foreach (Transform build in spawnParent)
+        {
+            Destroy(build.gameObject);
+        }
+    }
 }

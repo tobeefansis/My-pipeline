@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class BuildingObjectControl : MonoBehaviour, IPointerClickHandler
 {
     private Conveyor _conveyor;
-
+    public static float SpawnDirection;
     private void Awake()
     {
         _conveyor = GetComponent<Conveyor>();
@@ -23,12 +23,16 @@ public class BuildingObjectControl : MonoBehaviour, IPointerClickHandler
     public void ObjectRotationRight()
     {
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0, 90, 0));
+        SpawnDirection = transform.rotation.eulerAngles.y;
+        Debug.Log(SpawnDirection);
         _conveyor.Init();
     }
 
     public void ObjectRotationLeft()
     {
         transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles - new Vector3(0, 90, 0));
+        SpawnDirection = transform.rotation.eulerAngles.y;
+        Debug.Log(SpawnDirection);
         _conveyor.Init();
     }
 

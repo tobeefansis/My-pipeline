@@ -22,32 +22,44 @@ public class ObjectInstaller : Singleton<ObjectInstaller>
 
     public void StartInstall(Vector3 position)
     {
-        if (!gameObject.activeInHierarchy)return;
-        if (position.x<minPosition.x ||position.z<minPosition.y ||position.x>maxPosition.x || position.z>maxPosition.y )
+        if (!gameObject.activeInHierarchy) return;
+        if (position.x < minPosition.x || position.z < minPosition.y || position.x > maxPosition.x ||
+            position.z > maxPosition.y)
         {
             return;
         }
+
         if (builds.Any(build => position == build.transform.position)) return;
         position.y = yPosition;
-        currentGameObject = Instantiate(buildPrefab, buildsParent);
-        currentGameObject.transform.position = position;
+
+        var rotation = Quaternion.Euler(0, BuildingObjectControl.SpawnDirection, 0);
+        currentGameObject = Instantiate(buildPrefab, position, rotation, buildsParent);
     }
 
+    public void Clear()
+    {
+        foreach (Transform build in buildsParent.transform)
+        {
+            Destroy(build.gameObject);
+        }
+    }
     public void EndInstall(Vector3 position)
     {
-        if (!gameObject.activeInHierarchy)return;
+        if (!gameObject.activeInHierarchy) return;
         if (currentGameObject == null) return;
-        if (position==Vector3.positiveInfinity||builds.Any(build => position == build.transform.position))
+        if (position == Vector3.positiveInfinity || builds.Any(build => position == build.transform.position))
         {
             Destroy(currentGameObject);
             return;
         }
 
-        if (position.x<minPosition.x ||position.z<minPosition.y ||position.x>maxPosition.x || position.z>maxPosition.y )
+        if (position.x < minPosition.x || position.z < minPosition.y || position.x > maxPosition.x ||
+            position.z > maxPosition.y)
         {
             Destroy(currentGameObject);
             return;
         }
+
         position.y = yPosition;
         currentGameObject.transform.position = position;
         if (!PopupMenu.InstanceExists) return;
@@ -59,10 +71,15 @@ public class ObjectInstaller : Singleton<ObjectInstaller>
 
     public void Move(Vector3 position)
     {
-        if (!gameObject.activeInHierarchy)return;
+        if (!gameObject.activeInHierarchy) return;
         if (currentGameObject == null) return;
         if (builds.Any(build => position == build.transform.position)) return;
         currentGameObject.transform.position = position;
+    }
+
+    public void UpdateLevel(LevelPrefabArgs args)
+    {
+        builds = new List<GameObject>(args.Objects);
     }
 
     public void SetBuildItem(GameObject gameObject)
